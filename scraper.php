@@ -1,4 +1,5 @@
 <?php
+require 'scraperwiki.php';
 
 date_default_timezone_set('Australia/Sydney');
 require 'scraperwiki/simple_html_dom.php';
