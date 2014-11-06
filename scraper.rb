@@ -4,7 +4,7 @@ require 'date'
 
 # Replacing the old PHP scraper because Campbelltown changed everything.
 
-INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DALODG"
+INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DAPUEX"
 BASE_DETAILS_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/"
 
 def titleize(s)
@@ -42,10 +42,7 @@ end
 agent = Mechanize.new
 agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-search_page = agent.get(INIT_URL)
-search_form = search_page.forms[0]
-
-current_page = agent.submit(search_form, search_form.buttons.last)
+current_page = agent.get(INIT_URL)
 current_page_index = 1
 
 loop do
