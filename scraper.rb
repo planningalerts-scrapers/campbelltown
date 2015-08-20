@@ -5,7 +5,7 @@ require 'date'
 # Replacing the old PHP scraper because Campbelltown changed everything.
 
 INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DAPUEX"
-BASE_DETAILS_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/"
+INFO_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP"
 
 def titleize(s)
   s.gsub(/\w+/) { |w| w.capitalize }
@@ -29,7 +29,7 @@ def scrape_result_row(result_row)
     record['description'] = fields[1].search('div')[0].inner_text
     record['date_received'] = Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s
     record['date_scraped'] = Date.today.to_s
-    record['info_url'] = BASE_DETAILS_URL + fields[0].search('a')[0]['href']
+    record['info_url'] = INFO_URL
     record['comment_url'] = 'mailto:council@campbelltown.nsw.gov.au'
     # on_notice_from and on_notice_to don't seem to be available for this council.
 
