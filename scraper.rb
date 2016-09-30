@@ -4,7 +4,7 @@ require 'date'
 
 # Replacing the old PHP scraper because Campbelltown changed everything.
 
-INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DAPUEX"
+INIT_URL = "http://www.campbelltown.nsw.gov.au/HaveYourSay/DevelopmentOnline/DevelopmentOnlineServices/DevelopmentApplicationTracking"
 INFO_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP"
 
 def titleize(s)
@@ -21,18 +21,17 @@ def scrape_result_row(result_row)
 
   council_reference = fields[0].search('a')[0].inner_text
 
-  if (ScraperWiki.select("* from swdata where `council_reference`='#{council_reference}'").empty? rescue true)
-    puts "Saving record " + council_reference
-
+  if (ScraperWiki.select("* from data where `council_reference`='#{council_reference}'").empty? rescue true)
     record = { 'council_reference' => council_reference }
-    record['address'] = fields[4].search('span')[0].inner_text + ", " + titleize(fields[5].search('div')[0].inner_text) + ", NSW"
+    record['address'] = fields[4].search('span')[0].inner_text
     record['description'] = fields[1].search('div')[0].inner_text
     record['date_received'] = Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s
     record['date_scraped'] = Date.today.to_s
     record['info_url'] = INFO_URL
     record['comment_url'] = 'mailto:council@campbelltown.nsw.gov.au'
     # on_notice_from and on_notice_to don't seem to be available for this council.
-
+    # puts record
+    puts "Saving record " + council_reference + " - " + record['address']
     ScraperWiki.save_sqlite(['council_reference'], record)
   else
     puts "Skipping already saved record " + council_reference
@@ -43,6 +42,7 @@ agent = Mechanize.new
 agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 current_page = agent.get(INIT_URL)
+current_page = current_page.form.submit(current_page.form.button_with(:value=>'Search'))
 current_page_index = 1
 
 loop do
