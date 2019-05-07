@@ -21,21 +21,17 @@ def scrape_result_row(result_row)
 
   council_reference = fields[0].search('a')[0].inner_text
 
-  if (ScraperWiki.select("* from data where `council_reference`='#{council_reference}'").empty? rescue true)
-    record = { 'council_reference' => council_reference }
-    record['address'] = fields[4].search('span')[0].inner_text
-    record['description'] = fields[1].search('div')[0].inner_text
-    record['date_received'] = Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s
-    record['date_scraped'] = Date.today.to_s
-    record['info_url'] = INFO_URL
-    record['comment_url'] = 'mailto:council@campbelltown.nsw.gov.au'
-    # on_notice_from and on_notice_to don't seem to be available for this council.
-    # puts record
-    puts "Saving record " + council_reference + " - " + record['address']
-    ScraperWiki.save_sqlite(['council_reference'], record)
-  else
-    puts "Skipping already saved record " + council_reference
-  end
+  record = { 'council_reference' => council_reference }
+  record['address'] = fields[4].search('span')[0].inner_text
+  record['description'] = fields[1].search('div')[0].inner_text
+  record['date_received'] = Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s
+  record['date_scraped'] = Date.today.to_s
+  record['info_url'] = INFO_URL
+  record['comment_url'] = 'mailto:council@campbelltown.nsw.gov.au'
+  # on_notice_from and on_notice_to don't seem to be available for this council.
+  # puts record
+  puts "Saving record " + council_reference + " - " + record['address']
+  ScraperWiki.save_sqlite(['council_reference'], record)
 end
 
 agent = Mechanize.new
