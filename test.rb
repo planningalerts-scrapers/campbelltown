@@ -18,7 +18,7 @@ VCR.use_cassette("scraper") do
 end
 
 expected = YAML.load(File.read("fixtures/expected.yml"))
-results = ScraperWiki.select("* from data")
+results = ScraperWiki.select("* from data order by council_reference")
 
 unless results == expected
   File.open("fixtures/actual.yml", "w") do |f|
