@@ -2,9 +2,7 @@ require 'scraperwiki'
 require 'mechanize'
 require 'date'
 
-# Replacing the old PHP scraper because Campbelltown changed everything.
-
-INIT_URL = "http://www.campbelltown.nsw.gov.au/HaveYourSay/DevelopmentOnline/DevelopmentOnlineServices/DevelopmentApplicationTracking"
+INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DATRAC"
 INFO_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP"
 
 def titleize(s)
@@ -23,7 +21,7 @@ def scrape_result_row(result_row)
 
   record = { 'council_reference' => council_reference }
   record['address'] = fields[4].search('span')[0].inner_text
-  record['description'] = fields[1].search('div')[0].inner_text
+  record['description'] = fields[1].inner_text
   record['date_received'] = Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s
   record['date_scraped'] = Date.today.to_s
   record['info_url'] = INFO_URL
