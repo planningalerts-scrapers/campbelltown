@@ -14,12 +14,14 @@ def scrape_result_row(result_row)
 
   council_reference = fields[0].search('a')[0].inner_text
 
-  record = { 'council_reference' => council_reference }
-  record['address'] = fields[4].search('span')[0].inner_text
-  record['description'] = fields[1].inner_text
-  record['date_received'] = Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s
-  record['date_scraped'] = Date.today.to_s
-  record['info_url'] = INFO_URL
+  record = {
+    'council_reference' => council_reference,
+    'address' => fields[4].search('span')[0].inner_text,
+    'description' => fields[1].inner_text,
+    'date_received' => Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s,
+    'date_scraped' => Date.today.to_s,
+    'info_url' => INFO_URL
+  }
   # on_notice_from and on_notice_to don't seem to be available for this council.
   # puts record
   puts "Saving record " + council_reference + " - " + record['address']
