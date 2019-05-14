@@ -5,10 +5,6 @@ require 'date'
 INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DATRAC"
 INFO_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP"
 
-def titleize(s)
-  s.gsub(/\w+/) { |w| w.capitalize }
-end
-
 def scrape_result_row(result_row)
   fields = result_row.search('td')
 
