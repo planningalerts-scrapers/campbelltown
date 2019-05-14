@@ -20,5 +20,10 @@ end
 expected = YAML.load(File.read("fixtures/expected.yml"))
 results = ScraperWiki.select("* from data")
 
-raise "Failed" unless results == expected
+unless results == expected
+  File.open("fixtures/actual.yml", "w") do |f|
+    f.write(results.to_yaml)
+  end
+  raise "Failed"
+end
 puts "Succeeded"
