@@ -9,11 +9,6 @@ def titleize(s)
   s.gsub(/\w+/) { |w| w.capitalize }
 end
 
-def scrape_result_page(result_page)
-  result_page.search('tr.ContentPanel').each { |tr| scrape_result_row(tr) }
-  result_page.search('tr.AlternateContentPanel').each { |tr| scrape_result_row(tr) }
-end
-
 def scrape_result_row(result_row)
   fields = result_row.search('td')
 
@@ -39,7 +34,9 @@ current_page = current_page.form.submit(current_page.form.button_with(:value=>'S
 current_page_index = 1
 
 loop do
-  scrape_result_page(current_page)
+  current_page.search('tr.ContentPanel, tr.AlternateContentPanel').each do |tr|
+    scrape_result_row(tr)
+  end
 
   next_link = current_page.links_with(:text => (current_page_index+1).to_s)[0]
   break if !next_link
