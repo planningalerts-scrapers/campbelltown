@@ -25,7 +25,6 @@ def scrape_result_row(result_row)
 end
 
 agent = Mechanize.new
-agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 current_page = agent.get(INIT_URL)
 current_page = current_page.form.submit(current_page.form.button_with(:value=>'Search'))
