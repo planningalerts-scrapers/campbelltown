@@ -1,6 +1,6 @@
-require '../epathway_scraper'
+require 'epathway_scraper'
 
-scraper = EpathwayScraper.new(
+scraper = EpathwayScraper::Scraper.new(
   base_url: "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP",
   index: 2
 )
