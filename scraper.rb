@@ -5,21 +5,19 @@ INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/General
 INFO_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP"
 
 def scrape_result_row(result_row)
-  fields = result_row.search('td')
-
-  council_reference = fields[0].search('a')[0].inner_text
+  fields = result_row.search('td').map { |f| f.inner_text }
 
   record = {
-    'council_reference' => council_reference,
-    'address' => fields[4].search('span')[0].inner_text,
-    'description' => fields[1].inner_text,
-    'date_received' => Date.strptime(fields[2].search('span')[0].inner_text, '%d/%m/%Y').to_s,
+    'council_reference' => fields[0],
+    'address' => fields[4],
+    'description' => fields[1],
+    'date_received' => Date.strptime(fields[2], '%d/%m/%Y').to_s,
     'date_scraped' => Date.today.to_s,
     'info_url' => INFO_URL
   }
   # on_notice_from and on_notice_to don't seem to be available for this council.
   # puts record
-  puts "Saving record " + council_reference + " - " + record['address']
+  puts "Saving record " + record["council_reference"] + " - " + record['address']
   ScraperWiki.save_sqlite(['council_reference'], record)
 end
 
