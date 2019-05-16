@@ -4,7 +4,7 @@ require 'date'
 INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DATRAC"
 INFO_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP"
 
-scraper = EpathwayScraper.new(base_url: INIT_URL)
+scraper = EpathwayScraper.new(base_url: INIT_URL, index: 2)
 
 agent = scraper.agent
 
