@@ -1,6 +1,19 @@
 require '../epathway_scraper'
 require 'date'
 
+def click_next_page_link(current_page, current_page_index, agent)
+  next_link = current_page.links_with(:text => (current_page_index+1).to_s)[0]
+  return if !next_link
+  params = /javascript:WebForm_DoPostBackWithOptions\(new WebForm_PostBackOptions\("([^"]*)", "", false, "", "([^"]*)", false, true\)\)/.match(next_link.href)
+
+  aspnetForm = current_page.forms_with(:name => "aspnetForm")[0]
+  aspnetForm.action = params[2]
+  aspnetForm['__EVENTTARGET'] = params[1]
+  aspnetForm['__EVENTARGUMENT'] = ""
+
+  agent.submit(aspnetForm)
+end
+
 def scrape(scraper, agent)
   current_page = scraper.pick_type_of_search
   current_page = scraper.click_search_on_form(current_page.form)
@@ -11,16 +24,8 @@ def scrape(scraper, agent)
       yield record
     end
 
-    next_link = current_page.links_with(:text => (current_page_index+1).to_s)[0]
-    break if !next_link
-    params = /javascript:WebForm_DoPostBackWithOptions\(new WebForm_PostBackOptions\("([^"]*)", "", false, "", "([^"]*)", false, true\)\)/.match(next_link.href)
-
-    aspnetForm = current_page.forms_with(:name => "aspnetForm")[0]
-    aspnetForm.action = params[2]
-    aspnetForm['__EVENTTARGET'] = params[1]
-    aspnetForm['__EVENTARGUMENT'] = ""
-
-    current_page = agent.submit(aspnetForm)
+    current_page = click_next_page_link(current_page, current_page_index, agent)
+    break if current_page.nil?
     current_page_index += 1
   end
 end
