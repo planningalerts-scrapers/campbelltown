@@ -18,8 +18,7 @@ loop do
     record = {
       'council_reference' => row["Application Number"],
       'address' => row["Location Address"],
-      # TODO: Change this to using "Description"
-      'description' => row["Application Type"],
+      'description' => row["Description"],
       'date_received' => Date.strptime(row["Date Lodged"], '%d/%m/%Y').to_s,
       'date_scraped' => Date.today.to_s,
       'info_url' => INFO_URL
