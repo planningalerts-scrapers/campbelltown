@@ -1,5 +1,4 @@
-require 'scraperwiki'
-require 'mechanize'
+require '../epathway_scraper'
 require 'date'
 
 INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DATRAC"
@@ -24,10 +23,12 @@ def scrape_result_row(result_row)
   ScraperWiki.save_sqlite(['council_reference'], record)
 end
 
-agent = Mechanize.new
+scraper = EpathwayScraper.new(base_url: INIT_URL)
 
-current_page = agent.get(INIT_URL)
-current_page = current_page.form.submit(current_page.form.button_with(:value=>'Search'))
+agent = scraper.agent
+
+current_page = agent.get(scraper.base_url)
+current_page = scraper.click_search_on_form(current_page.form)
 current_page_index = 1
 
 loop do
