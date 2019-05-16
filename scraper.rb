@@ -1,14 +1,13 @@
 require '../epathway_scraper'
 require 'date'
 
-INIT_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/ExternalRequestBroker.aspx?Module=EGELAP&Class=0PEAPP&Type=DATRAC"
 INFO_URL = "https://ebiz.campbelltown.nsw.gov.au/ePathway/Production/Web/GeneralEnquiry/EnquiryLists.aspx?ModuleCode=LAP"
 
-scraper = EpathwayScraper.new(base_url: INIT_URL, index: 2)
+scraper = EpathwayScraper.new(base_url: INFO_URL, index: 2)
 
 agent = scraper.agent
 
-current_page = agent.get(scraper.base_url)
+current_page = scraper.pick_type_of_search
 current_page = scraper.click_search_on_form(current_page.form)
 current_page_index = 1
 
