@@ -12,14 +12,24 @@ current_page = agent.get(scraper.base_url)
 current_page = scraper.click_search_on_form(current_page.form)
 current_page_index = 1
 
+def extract_index_data(row)
+  {
+    council_reference: row[:content]["Application Number"],
+    address: row[:content]["Location Address"],
+    description: row[:content]["Description"],
+    date_received: Date.strptime(row[:content]["Date Lodged"], '%d/%m/%Y').to_s
+  }
+end
+
 loop do
   table = current_page.at("table.ContentPanel")
   scraper.extract_table_data_and_urls(table).each do |row|
+    index_data = extract_index_data(row)
     record = {
-      'council_reference' => row[:content]["Application Number"],
-      'address' => row[:content]["Location Address"],
-      'description' => row[:content]["Description"],
-      'date_received' => Date.strptime(row[:content]["Date Lodged"], '%d/%m/%Y').to_s,
+      'council_reference' => index_data[:council_reference],
+      'address' => index_data[:address],
+      'description' => index_data[:description],
+      'date_received' => index_data[:date_received],
       'date_scraped' => Date.today.to_s,
       'info_url' => INFO_URL
     }
