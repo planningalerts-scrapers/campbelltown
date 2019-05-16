@@ -12,19 +12,7 @@ current_page = scraper.click_search_on_form(current_page.form)
 current_page_index = 1
 
 loop do
-  table = current_page.at("table.ContentPanel")
-  scraper.extract_table_data_and_urls(table).each do |row|
-    index_data = scraper.extract_index_data(row)
-    record = {
-      'council_reference' => index_data[:council_reference],
-      'address' => index_data[:address],
-      'description' => index_data[:description],
-      'date_received' => index_data[:date_received],
-      'date_scraped' => Date.today.to_s,
-      'info_url' => INFO_URL
-    }
-    # on_notice_from and on_notice_to don't seem to be available for this council.
-    # puts record
+  scraper.scrape_index_page(current_page) do |record|
     puts "Saving record " + record["council_reference"] + " - " + record['address']
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
