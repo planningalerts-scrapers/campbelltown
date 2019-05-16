@@ -14,12 +14,12 @@ current_page_index = 1
 
 loop do
   table = current_page.at("table.ContentPanel")
-  scraper.extract_table_data(table).each do |row|
+  scraper.extract_table_data_and_urls(table).each do |row|
     record = {
-      'council_reference' => row["Application Number"],
-      'address' => row["Location Address"],
-      'description' => row["Description"],
-      'date_received' => Date.strptime(row["Date Lodged"], '%d/%m/%Y').to_s,
+      'council_reference' => row[:content]["Application Number"],
+      'address' => row[:content]["Location Address"],
+      'description' => row[:content]["Description"],
+      'date_received' => Date.strptime(row[:content]["Date Lodged"], '%d/%m/%Y').to_s,
       'date_scraped' => Date.today.to_s,
       'info_url' => INFO_URL
     }
